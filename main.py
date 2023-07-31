@@ -44,26 +44,14 @@ def DownloadVideo(video_link: str):
     cls()
     print(Fore.GREEN + "In Progress..." + Style.RESET_ALL)
 
-    try:
-        video = YouTube(video_link).streams.filter(only_audio=True).first()
-        print(
-            Fore.GREEN + "Downloading Video..." + Style.RESET_ALL + f' "{video.title}"'
-        )
+    video = YouTube(video_link).streams.filter(only_audio=True).first()
+    print(Fore.GREEN + "Downloading Video..." + Style.RESET_ALL + f' "{video.title}"')
 
-        out_file = video.download(output_path=DESKTOP)
-        RenameExt(out_file)
-        print(Fore.GREEN + "Success! Your mp3 has been downloaded" + Style.RESET_ALL)
-        time.sleep(3)
-        main()
-
-    except:
-        print(
-            Fore.RED
-            + "Looks like something went wrong... don't know how you managed to do that..."
-            + Style.RESET_ALL
-        )
-        time.sleep(3)
-        main()
+    out_file = video.download(output_path=DESKTOP)
+    RenameExt(out_file)
+    print(Fore.GREEN + "Success! Your mp3 has been downloaded" + Style.RESET_ALL)
+    time.sleep(3)
+    main()
 
 
 def DownloadPlaylist(video_link: str):
@@ -71,45 +59,30 @@ def DownloadPlaylist(video_link: str):
     playlist = Playlist(video_link)
     print(Fore.GREEN + "In Progress..." + Style.RESET_ALL + f" {playlist.title}")
 
-    try:
-        for video in tqdm(playlist.videos):
-            print(
-                Fore.GREEN
-                + " Downloading Video..."
-                + Style.RESET_ALL
-                + f' "{video.title}"'
-            )
-            out_file = (
-                video.streams.filter(only_audio=True)
-                .first()
-                .download(output_path=DESKTOP)
-            )
-            RenameExt(out_file)
-            print(Fore.GREEN + "Success!" + Style.RESET_ALL)
-            time.sleep(1)
-            cls()
-
+    for video in tqdm(playlist.videos):
         print(
-            Fore.GREEN
-            + "The following videos from playlist: "
-            + Style.RESET_ALL
-            + f"{playlist.title}\n"
+            Fore.GREEN + " Downloading Video..." + Style.RESET_ALL + f' "{video.title}"'
         )
-        for video in playlist.videos:
-            print(f"    {video.title}")
-
-        print(Fore.GREEN + "\nHave been downloaded! Happy Listening!" + Style.RESET_ALL)
-        time.sleep(3)
-        main()
-
-    except:
-        print(
-            Fore.RED
-            + "Looks like something went wrong... don't know how you managed to do that..."
-            + Style.RESET_ALL
+        out_file = (
+            video.streams.filter(only_audio=True).first().download(output_path=DESKTOP)
         )
-        time.sleep(3)
-        main()
+        RenameExt(out_file)
+        print(Fore.GREEN + "Success!" + Style.RESET_ALL)
+        time.sleep(1)
+        cls()
+
+    print(
+        Fore.GREEN
+        + "The following videos from playlist: "
+        + Style.RESET_ALL
+        + f"{playlist.title}\n"
+    )
+    for video in playlist.videos:
+        print(f"    {video.title}")
+
+    print(Fore.GREEN + "\nHave been downloaded! Happy Listening!" + Style.RESET_ALL)
+    time.sleep(3)
+    main()
 
 
 def RenameExt(out_file: str):
