@@ -113,9 +113,21 @@ def DownloadPlaylist(video_link: str):
 
 
 def RenameExt(out_file: str):
-    base, ext = os.path.splitext(out_file)
-    new_file = base + ".mp3"
-    os.rename(out_file, new_file)
+    try:
+        base, ext = os.path.splitext(out_file)
+        new_file = base + ".mp3"
+        os.rename(out_file, new_file)
+
+    except FileExistsError as error:
+        print(
+            Fore.RED
+            + f"\nFile already exists, please try again. Restarting"
+            + Style.RESET_ALL
+        )
+        path = os.path.join(DESKTOP, out_file)
+        os.remove(path)
+        time.sleep(3)
+        main()
 
 
 if __name__ == "__main__":
